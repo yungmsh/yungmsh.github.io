@@ -24,7 +24,7 @@ Syntax highlighted code block
 **Bold** and _Italic_ and `Code` text
 
 [Google](https://www.google.com/) and ![Image](src)
-[Viz](https://github.com/yungmsh/yungmsh.github.io/blob/master/Channel%20Health%20Visualization.ipynb)
+<a href='https://github.com/yungmsh/yungmsh.github.io/blob/master/Channel%20Health%20Visualization.ipynb'>Viz</a>
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).

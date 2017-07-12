@@ -23,7 +23,8 @@ Syntax highlighted code block
 
 **Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
+[Google](https://www.google.com/) and ![Image](src)
+[Viz](https://github.com/yungmsh/yungmsh.github.io/blob/master/Channel%20Health%20Visualization.ipynb)
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).

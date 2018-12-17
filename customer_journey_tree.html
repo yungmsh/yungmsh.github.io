@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Customer Journey Tree</title>
+    <style>
+      .node {
+        cursor: pointer;
+        white-space: pre;
+      }
+      .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        white-space: pre;
+      }
+      .node text {
+        font: 12px sans-serif;
+        white-space: pre;
+      }
+      .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+        white-space: pre;
+      }
+
+      /* Style the header */
+      .header {
+        padding: 10px 16px;
+        background: #555;
+        color: #f1f1f1;
+      }
+
+      /* Page content */
+      /* .content {
+        padding: 16px;
+      } */
+
+      /* The sticky class is added to the header with JS when it reaches its scroll position */
+      .sticky {
+        position: fixed;
+        top: 0;
+        width: 100%
+      }
+
+      /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+      .sticky + .content {
+        padding-top: 102px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="d3_plan_tree"></div>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script>
+
+      var treeData = [{'parent': 'na', 'name': 'start', 'ltv': '$275', 'num_users': '353,707', 'children': [{'name': 'one-time', 'color': 'grey', 'delta_root': '-22%', 'pct_users': '59.7%', 'delta': '-22%', 'delta_root_color': 'red', 'children': [{'name': 'one-time', 'color': 'grey', 'delta_root': '+25%', 'pct_users': '17.6%', 'delta': '+61%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': 'grey', 'delta_root': '+66%', 'pct_users': '7.6%', 'delta': '+32%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': '#4CBB17', 'delta_root': '+100%', 'pct_users': '4.1%', 'delta': '+21%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'CHURN', 'color': 'grey', 'delta_root': '-6%', 'pct_users': '1.1%', 'delta': '-53%', 'delta_root_color': 'grey', 'children': [], 'delta_color': 'red', 'num_users': '3,766', 'parent': '4_one-time', 'ltv': '$257', 'weight': 1}, {'name': 'one-time', 'color': '#4CBB17', 'delta_root': '+130%', 'pct_users': '2.5%', 'delta': '+15%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '8,678', 'parent': '4_one-time', 'ltv': '$631', 'weight': 1}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+173%', 'pct_users': '0.5%', 'delta': '+37%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': '#4CBB17', 'num_users': '1,908', 'parent': '4_one-time', 'ltv': '$750', 'weight': 1}], 'delta_color': '#4CBB17', 'num_users': '14,352', 'parent': '3_one-time', 'ltv': '$549', 'weight': 1, 'path_from': 'one-time -> one-time -> one-time -> one-time -> subscription'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+159%', 'pct_users': '1.2%', 'delta': '+56%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+176%', 'pct_users': '0.9%', 'delta': '+6%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '3,173', 'parent': '4_subscription', 'ltv': '$757', 'weight': 1}], 'delta_color': '#4CBB17', 'num_users': '4,144', 'parent': '3_one-time', 'ltv': '$712', 'weight': 1, 'path_from': 'one-time -> one-time -> one-time -> subscription -> renewal'}, {'name': 'CHURN', 'color': 'grey', 'delta_root': '-39%', 'pct_users': '2.4%', 'delta': '-63%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '8,363', 'parent': '3_one-time', 'ltv': '$168', 'weight': 1, 'path_from': 'one-time -> one-time -> one-time -> CHURN'}], 'delta_color': '#4CBB17', 'num_users': '26,861', 'parent': '2_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$455', 'weight': 2, 'path_from': 'one-time -> one-time -> one-time'}, {'name': 'CHURN', 'color': 'red', 'delta_root': '-68%', 'pct_users': '6.9%', 'delta': '-74%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '24,427', 'parent': '2_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$89', 'weight': 2, 'path_from': 'one-time -> one-time -> CHURN'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+133%', 'pct_users': '3.1%', 'delta': '+86%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+148%', 'pct_users': '2.5%', 'delta': '+6%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'CHURN', 'color': 'grey', 'delta_root': '-0%', 'pct_users': '0.3%', 'delta': '-60%', 'delta_root_color': 'grey', 'children': [], 'delta_color': 'red', 'num_users': '1,037', 'parent': '4_renewal', 'ltv': '$274', 'weight': 1}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+168%', 'pct_users': '1.9%', 'delta': '+8%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '6,790', 'parent': '4_renewal', 'ltv': '$736', 'weight': 1}], 'delta_color': 'grey', 'num_users': '8,710', 'parent': '3_subscription', 'ltv': '$681', 'weight': 1, 'path_from': 'one-time -> one-time -> subscription -> renewal -> renewal'}], 'delta_color': '#4CBB17', 'num_users': '11,054', 'parent': '2_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$641', 'weight': 1, 'path_from': 'one-time -> one-time -> subscription'}], 'delta_color': '#4CBB17', 'num_users': '62,346', 'parent': '1_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$345', 'weight': 6, 'path_from': 'one-time -> one-time'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+107%', 'pct_users': '9.8%', 'delta': '+165%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': '#4CBB17', 'delta_root': '+107%', 'pct_users': '0.7%', 'delta': '-0%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+142%', 'pct_users': '0.5%', 'delta': '+17%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+171%', 'pct_users': '0.3%', 'delta': '+12%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,135', 'parent': '4_subscription', 'ltv': '$745', 'weight': 1}], 'delta_color': 'grey', 'num_users': '1,655', 'parent': '3_one-time', 'ltv': '$666', 'weight': 1, 'path_from': 'one-time -> subscription -> one-time -> subscription -> renewal'}], 'delta_color': 'grey', 'num_users': '2,594', 'parent': '2_subscription', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$567', 'weight': 1, 'path_from': 'one-time -> subscription -> one-time'}, {'name': 'CHURN', 'color': 'red', 'delta_root': '-64%', 'pct_users': '0.7%', 'delta': '-83%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '2,579', 'parent': '2_subscription', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$99', 'weight': 1, 'path_from': 'one-time -> subscription -> CHURN'}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+122%', 'pct_users': '7.9%', 'delta': '+7%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': '#4CBB17', 'delta_root': '+138%', 'pct_users': '0.4%', 'delta': '+7%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,456', 'parent': '3_renewal', 'ltv': '$655', 'weight': 1, 'path_from': 'one-time -> subscription -> renewal -> one-time'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+149%', 'pct_users': '0.3%', 'delta': '+12%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,052', 'parent': '3_renewal', 'ltv': '$683', 'weight': 1, 'path_from': 'one-time -> subscription -> renewal -> subscription'}, {'name': 'CHURN', 'color': 'grey', 'delta_root': '-32%', 'pct_users': '1.0%', 'delta': '-69%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '3,396', 'parent': '3_renewal', 'ltv': '$186', 'weight': 1, 'path_from': 'one-time -> subscription -> renewal -> CHURN'}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+144%', 'pct_users': '6.2%', 'delta': '+10%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'CHURN', 'color': 'grey', 'delta_root': '+2%', 'pct_users': '0.8%', 'delta': '-58%', 'delta_root_color': 'grey', 'children': [], 'delta_color': 'red', 'num_users': '2,852', 'parent': '4_renewal', 'ltv': '$280', 'weight': 1}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+165%', 'pct_users': '4.9%', 'delta': '+9%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '17,415', 'parent': '4_renewal', 'ltv': '$727', 'weight': 1}], 'delta_color': 'grey', 'num_users': '21,914', 'parent': '3_renewal', 'ltv': '$669', 'weight': 2, 'path_from': 'one-time -> subscription -> renewal -> renewal -> renewal'}], 'delta_color': 'grey', 'num_users': '27,818', 'parent': '2_subscription', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$610', 'weight': 2, 'path_from': 'one-time -> subscription -> renewal'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+124%', 'pct_users': '0.5%', 'delta': '+8%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+151%', 'pct_users': '0.4%', 'delta': '+12%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,258', 'parent': '3_subscription', 'ltv': '$691', 'weight': 1, 'path_from': 'one-time -> subscription -> subscription -> renewal'}], 'delta_color': 'grey', 'num_users': '1,748', 'parent': '2_subscription', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$616', 'weight': 1, 'path_from': 'one-time -> subscription -> subscription'}], 'delta_color': '#4CBB17', 'num_users': '34,739', 'parent': '1_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$569', 'weight': 3, 'path_from': 'one-time -> subscription'}, {'name': 'CHURN', 'color': 'red', 'delta_root': '-87%', 'pct_users': '32.2%', 'delta': '-84%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '113,982', 'parent': '1_one-time', 'best_to': 'n/a', 'worst_to': 'n/a', 'ltv': '$35', 'weight': 6, 'path_from': 'one-time -> CHURN'}], 'delta_color': 'red', 'num_users': '211,072', 'parent': 'Start', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$215', 'weight': 6, 'path_from': 'one-time'}, {'name': 'subscription', 'color': 'grey', 'delta_root': '+32%', 'pct_users': '40.3%', 'delta': '+32%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': 'grey', 'delta_root': '+43%', 'pct_users': '2.7%', 'delta': '+8%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': 'grey', 'delta_root': '+52%', 'pct_users': '0.4%', 'delta': '+6%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,286', 'parent': '2_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$417', 'weight': 1, 'path_from': 'subscription -> one-time -> one-time'}, {'name': 'CHURN', 'color': 'red', 'delta_root': '-80%', 'pct_users': '0.6%', 'delta': '-86%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '2,213', 'parent': '2_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$55', 'weight': 1, 'path_from': 'subscription -> one-time -> CHURN'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+88%', 'pct_users': '1.7%', 'delta': '+31%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+118%', 'pct_users': '1.1%', 'delta': '+16%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+144%', 'pct_users': '0.8%', 'delta': '+12%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '2,830', 'parent': '4_renewal', 'ltv': '$671', 'weight': 1}], 'delta_color': 'grey', 'num_users': '3,942', 'parent': '3_subscription', 'ltv': '$600', 'weight': 1, 'path_from': 'subscription -> one-time -> subscription -> renewal -> renewal'}], 'delta_color': '#4CBB17', 'num_users': '5,894', 'parent': '2_one-time', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$516', 'weight': 1, 'path_from': 'subscription -> one-time -> subscription'}], 'delta_color': 'grey', 'num_users': '9,393', 'parent': '1_subscription', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$394', 'weight': 1, 'path_from': 'subscription -> one-time'}, {'name': 'subscription', 'color': 'grey', 'delta_root': '+53%', 'pct_users': '2.9%', 'delta': '+16%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'CHURN', 'color': 'red', 'delta_root': '-77%', 'pct_users': '0.5%', 'delta': '-85%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '1,808', 'parent': '2_subscription', 'best_to': 'renewal', 'worst_to': 'CHURN', 'ltv': '$64', 'weight': 1, 'path_from': 'subscription -> subscription -> CHURN'}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+83%', 'pct_users': '1.9%', 'delta': '+20%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+115%', 'pct_users': '1.3%', 'delta': '+18%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+144%', 'pct_users': '1.0%', 'delta': '+13%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '3,385', 'parent': '4_renewal', 'ltv': '$670', 'weight': 1}], 'delta_color': 'grey', 'num_users': '4,668', 'parent': '3_renewal', 'ltv': '$591', 'weight': 1, 'path_from': 'subscription -> subscription -> renewal -> renewal -> renewal'}, {'name': 'CHURN', 'color': 'grey', 'delta_root': '-50%', 'pct_users': '0.3%', 'delta': '-73%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '1,231', 'parent': '3_renewal', 'ltv': '$137', 'weight': 1, 'path_from': 'subscription -> subscription -> renewal -> CHURN'}], 'delta_color': 'grey', 'num_users': '6,802', 'parent': '2_subscription', 'best_to': 'renewal', 'worst_to': 'CHURN', 'ltv': '$503', 'weight': 1, 'path_from': 'subscription -> subscription -> renewal'}, {'name': 'subscription', 'color': 'grey', 'delta_root': '+70%', 'pct_users': '0.3%', 'delta': '+11%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,050', 'parent': '2_subscription', 'best_to': 'renewal', 'worst_to': 'CHURN', 'ltv': '$466', 'weight': 1, 'path_from': 'subscription -> subscription -> subscription'}], 'delta_color': 'grey', 'num_users': '10,316', 'parent': '1_subscription', 'best_to': 'renewal', 'worst_to': 'CHURN', 'ltv': '$420', 'weight': 1, 'path_from': 'subscription -> subscription'}, {'name': 'renewal', 'color': 'grey', 'delta_root': '+57%', 'pct_users': '28.2%', 'delta': '+19%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': 'grey', 'delta_root': '+78%', 'pct_users': '1.3%', 'delta': '+13%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+126%', 'pct_users': '0.9%', 'delta': '+27%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+149%', 'pct_users': '0.6%', 'delta': '+10%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '2,262', 'parent': '4_subscription', 'ltv': '$685', 'weight': 1}], 'delta_color': '#4CBB17', 'num_users': '3,035', 'parent': '3_one-time', 'ltv': '$621', 'weight': 1, 'path_from': 'subscription -> renewal -> one-time -> subscription -> renewal'}, {'name': 'CHURN', 'color': 'grey', 'delta_root': '-61%', 'pct_users': '0.3%', 'delta': '-78%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '1,080', 'parent': '3_one-time', 'ltv': '$107', 'weight': 1, 'path_from': 'subscription -> renewal -> one-time -> CHURN'}], 'delta_color': 'grey', 'num_users': '4,688', 'parent': '2_renewal', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$488', 'weight': 1, 'path_from': 'subscription -> renewal -> one-time'}, {'name': 'CHURN', 'color': 'red', 'delta_root': '-76%', 'pct_users': '5.2%', 'delta': '-85%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '18,472', 'parent': '2_renewal', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$67', 'weight': 1, 'path_from': 'subscription -> renewal -> CHURN'}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+87%', 'pct_users': '20.4%', 'delta': '+19%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'one-time', 'color': '#4CBB17', 'delta_root': '+113%', 'pct_users': '0.6%', 'delta': '+13%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+154%', 'pct_users': '0.5%', 'delta': '+19%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,630', 'parent': '4_one-time', 'ltv': '$698', 'weight': 1}], 'delta_color': 'grey', 'num_users': '2,283', 'parent': '3_renewal', 'ltv': '$584', 'weight': 1, 'path_from': 'subscription -> renewal -> renewal -> one-time -> subscription'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+120%', 'pct_users': '0.7%', 'delta': '+17%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+138%', 'pct_users': '0.6%', 'delta': '+8%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '2,076', 'parent': '4_subscription', 'ltv': '$653', 'weight': 1}], 'delta_color': 'grey', 'num_users': '2,592', 'parent': '3_renewal', 'ltv': '$604', 'weight': 1, 'path_from': 'subscription -> renewal -> renewal -> subscription -> renewal'}, {'name': 'CHURN', 'color': 'grey', 'delta_root': '-48%', 'pct_users': '3.5%', 'delta': '-72%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '12,239', 'parent': '3_renewal', 'ltv': '$142', 'weight': 1, 'path_from': 'subscription -> renewal -> renewal -> CHURN'}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+115%', 'pct_users': '15.6%', 'delta': '+15%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+144%', 'pct_users': '0.5%', 'delta': '+14%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,664', 'parent': '4_renewal', 'ltv': '$671', 'weight': 1}, {'name': 'CHURN', 'color': 'grey', 'delta_root': '-13%', 'pct_users': '2.6%', 'delta': '-59%', 'delta_root_color': 'grey', 'children': [], 'delta_color': 'red', 'num_users': '9,048', 'parent': '4_renewal', 'ltv': '$240', 'weight': 1}, {'name': 'one-time', 'color': '#4CBB17', 'delta_root': '+138%', 'pct_users': '0.4%', 'delta': '+11%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '1,429', 'parent': '4_renewal', 'ltv': '$653', 'weight': 1}, {'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+140%', 'pct_users': '12.1%', 'delta': '+12%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '42,962', 'parent': '4_renewal', 'ltv': '$659', 'weight': 4}], 'delta_color': 'grey', 'num_users': '55,103', 'parent': '3_renewal', 'ltv': '$590', 'weight': 5, 'path_from': 'subscription -> renewal -> renewal -> renewal -> renewal'}], 'delta_color': 'grey', 'num_users': '72,218', 'parent': '2_renewal', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$515', 'weight': 6, 'path_from': 'subscription -> renewal -> renewal'}, {'name': 'subscription', 'color': '#4CBB17', 'delta_root': '+97%', 'pct_users': '1.2%', 'delta': '+26%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+121%', 'pct_users': '0.9%', 'delta': '+12%', 'delta_root_color': '#4CBB17', 'children': [{'name': 'renewal', 'color': '#4CBB17', 'delta_root': '+148%', 'pct_users': '0.7%', 'delta': '+13%', 'delta_root_color': '#4CBB17', 'children': [], 'delta_color': 'grey', 'num_users': '2,332', 'parent': '4_renewal', 'ltv': '$683', 'weight': 1}], 'delta_color': 'grey', 'num_users': '3,208', 'parent': '3_subscription', 'ltv': '$607', 'weight': 1, 'path_from': 'subscription -> renewal -> subscription -> renewal -> renewal'}], 'delta_color': '#4CBB17', 'num_users': '4,279', 'parent': '2_renewal', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$542', 'weight': 1, 'path_from': 'subscription -> renewal -> subscription'}], 'delta_color': 'grey', 'num_users': '99,658', 'parent': '1_subscription', 'best_to': 'subscription', 'worst_to': 'CHURN', 'ltv': '$432', 'weight': 6, 'path_from': 'subscription -> renewal'}, {'name': 'CHURN', 'color': 'red', 'delta_root': '-88%', 'pct_users': '6.5%', 'delta': '-91%', 'delta_root_color': 'red', 'children': [], 'delta_color': 'red', 'num_users': '23,084', 'parent': '1_subscription', 'best_to': 'n/a', 'worst_to': 'n/a', 'ltv': '$32', 'weight': 2, 'path_from': 'subscription -> CHURN'}], 'delta_color': '#4CBB17', 'num_users': '142,452', 'parent': 'Start', 'best_to': 'renewal', 'worst_to': 'CHURN', 'ltv': '$364', 'weight': 6, 'path_from': 'subscription'}]}];
+
+      (function(d3, treeData) {
+        // ************** Generate the tree diagram   *****************
+        var margin = {top: 0.01*window.innerHeight, right: 0.05*window.innerWidth, bottom: 0.01*window.innerHeight, left: 0.05*window.innerWidth},
+          width = window.innerWidth - margin.right - margin.left;
+          height = window.innerHeight - margin.top - margin.bottom;
+        var i = 0,
+          duration = 750,
+          root;
+        var tree = d3.layout.tree()
+          .size([height, width]);
+        var diagonal = d3.svg.diagonal()
+          .projection(function(d) { return [d.y, d.x]; });
+        var svg = d3.select(".d3_plan_tree").append("svg")
+          .attr("width", width + margin.right + margin.left)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        root = treeData[0];
+        root.x0 = height / 2;
+        root.y0 = 0;
+        update(root);
+        function update(source) {
+          // Compute the new tree layout.
+          var nodes = tree.nodes(root).reverse(),
+            links = tree.links(nodes);
+          // Normalize for fixed-depth.
+          nodes.forEach(function(d) { d.y = d.depth * 200*window.innerWidth/1600; });
+          // Update the nodes…
+          var node = svg.selectAll("g.node")
+            .data(nodes, function(d) { return d.id || (d.id = ++i); });
+          // Enter any new nodes at the parent's previous position.
+          var nodeEnter = node.enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+            .on("click", click)
+            .on("mouseover", handleMouseOver)
+            // .on("mousemove", handleMouseMove)
+            .on("mouseout", handleMouseOut)
+            ;
+          nodeEnter.append("circle")
+            .attr("r", 1e-6)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
+            .style("stroke", function(d) { return d.color; })
+            .style("stroke-width", function(d) { return d.weight; })
+            ;
+          nodeEnter.append("text")
+            .attr("x", function(d) { return d.children || d._children ? -14 : 14; })
+            .attr("dy", function(d) { return d.children || d._children ? -9 : 9; })
+            // .attr("dy", ".35em")
+            .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+            .text(function(d) { return d.name;})
+            .style("fill-opacity", 1e-6);
+          nodeEnter.append("text")
+            .attr("dx", "-0.9em")
+            .attr("dy", "0.3em")
+            .attr("font-size","1px")
+            // .attr("fill","red")
+            .attr("fill", function(d) {return d.delta_color;})
+            .text(function(d) { return d.delta;});
+          // Transition nodes to their new position.
+          var nodeUpdate = node.transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+          nodeUpdate.select("circle")
+            .attr("r", 13)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+          nodeUpdate.select("text")
+            .style("fill-opacity", 1);
+          // Transition exiting nodes to the parent's new position.
+          var nodeExit = node.exit().transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+            .remove();
+          nodeExit.select("circle")
+            .attr("r", 1e-6);
+          nodeExit.select("text")
+            .style("fill-opacity", 1e-6);
+          // Update the links…
+          var link = svg.selectAll("path.link")
+            .data(links, function(d) { return d.target.id; })
+            ;
+          // Enter any new links at the parent's previous position.
+          link.enter().insert("path", "g")
+            .attr("class", "link")
+            .attr("d", function(d) {
+            var o = {x: source.x0, y: source.y0};
+            return diagonal({source: o, target: o});
+            })
+            .style("stroke", function(d) { return d.target.color; })
+            .style("stroke-width", function(d) { return d.target.weight; })
+            ;
+          // Transition links to their new position.
+          link.transition()
+            .duration(duration)
+            .attr("d", diagonal);
+          // Transition exiting nodes to the parent's new position.
+          link.exit().transition()
+            .duration(duration)
+            .attr("d", function(d) {
+            var o = {x: source.x, y: source.y};
+            return diagonal({source: o, target: o});
+            })
+            .remove();
+          // Stash the old positions for transition.
+          nodes.forEach(function(d) {
+          d.x0 = d.x;
+          d.y0 = d.y;
+          });
+        }
+        // Toggle children on click.
+        function click(d) {
+          if (d.children) {
+          d._children = d.children;
+          d.children = null;
+          } else {
+          d.children = d._children;
+          d._children = null;
+          }
+          update(d);
+        }
+
+        // Create static summary text
+        var static_x = 1200*window.innerWidth/1680;
+        var static_y = 100*window.innerHeight/1050;
+        // "Selected Path Statistics"
+        var static_title = svg.append("text")
+          .attr(
+            {x:static_x,y:static_y,"font-size":"20px","font-family":"verdana"}
+          )
+          .text("Summary (for selected path)");
+        // Create line below static text
+        var static_line = svg.append("line")          // attach a line
+          .style("stroke", "black")  // colour the line
+          .attr("x1", static_x)     // x1 position of the first end of the line
+          .attr("y1", static_y + 10)      // y1 position of the first end of the line
+          .attr("x2", static_x + 320)     // x2 position of the second end of the line
+          .attr("y2", static_y + 10);    // y2 position of the second end of the line
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(0*30),"font-size":"18px","font-family":"verdana"})
+          .text("LTV:");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(1*30),"font-size":"18px","font-family":"verdana"})
+          .text("# of Users:");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(2*30),"font-size":"18px","font-family":"verdana"})
+          .text("Delta (Prev. Node):");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(3*30),"font-size":"18px","font-family":"verdana"})
+          .text("Delta (Global Avg):");
+        // Create Event Handlers for mouse
+        function handleMouseOver(d, i) {  // Add interactivity
+          console.log('handleMouseOver', d, i);
+              // Use D3 to select element, change color and size
+              d3.select(this)
+              .attr({fill: "orange"});
+              svg.append("text")
+                .attr({id: "hover_text_1",x: static_x+200, y:static_y+70+(0*30),
+                  "fill": d.color,"font-size": "18px","font-family": "verdana"})
+                .text(d.ltv);
+              svg.append("text")
+                .attr({id: "hover_text_2",x: static_x+200, y:static_y+70+(1*30),
+                  fill: "black","font-size": "18px","font-family": "verdana"})
+                .text(d.num_users + " (" + d.pct_users + ")");
+              svg.append("text")
+                .attr({id: "hover_text_3",x: static_x+200, y:static_y+70+(2*30),
+                  "fill": d.delta_color,"font-size": "18px","font-family": "verdana"})
+                .text(d.delta);
+              svg.append("text")
+                .attr({id: "hover_text_4",x: static_x+200, y:static_y+70+(3*30),
+                  "fill": d.delta_root_color,"font-size": "18px","font-family": "verdana"})
+                .text(d.delta_root);
+            }
+        function handleMouseOut(d,i) {
+              // Use D3 to select element, change color back to normal
+              d3.select(this).attr({
+                fill: "black"
+              });
+              d3.select("#hover_text_1").remove();
+              d3.select("#hover_text_2").remove();
+              d3.select("#hover_text_3").remove();
+              d3.select("#hover_text_4").remove();
+            }
+
+        // When the user scrolls the page, execute myFunction
+        window.onscroll = function() {myFunction()};
+
+        // Get the header
+        var header = document.getElementById("myHeader");
+
+        // Get the offset position of the navbar
+        var sticky = header.offsetTop;
+
+        // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        function myFunction() {
+          if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+          } else {
+            header.classList.remove("sticky");
+          }
+        }
+
+      })(window.d3, treeData);
+
+    </script>
+
+  </body>
+</html>

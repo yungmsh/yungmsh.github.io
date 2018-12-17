@@ -1,0 +1,121 @@
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11"/>
+    <link rel="stylesheet" href="reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="reveal.js/css/theme/black.css">
+    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css" />
+    <link rel="stylesheet" href="reveal.js/css/custom-gc.css" />
+    <link rel="stylesheet" href="reveal.js/css/retina.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section>
+    <h1> Intro slide</h1>
+    <div class="row no-margin-top">
+      <h5> Here is an image.</h5>
+      <img src="img/team.jpg"  height="500" width="380">
+    </div>
+</section>
+
+<section>
+  <section>
+    <h1> D3 visualizations below.</h1>
+    <div class="prompt input_prompt"></div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla posuere neque sed ligula molestie, non faucibus odio dictum. Ut accumsan feugiat quam non feugiat.
+      Donec egestas lacinia enim, in accumsan urna pulvinar vitae.
+      Nullam sodales posuere justo, sit amet porta ipsum. Vivamus volutpat dictum mi id condimentum.
+      Nam non sapien eu neque mattis consectetur. Ut lacinia turpis sed turpis tincidunt aliquet.
+      Integer semper blandit nunc et lacinia. Suspendisse at lorem elit.
+      Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+      </p>
+  </section>
+
+  <section data-transition="zoom-in fade-out">
+      <h3 data-transition="zoom-in fade-out">Visualization is in fixed container on page</h3>
+      <div class="row no-margin-top" data-transition="zoom-in fade-out">
+          <div class="fig-container no-margin-top" data-file="customer_journey_tree.html" data-transition="zoom-in fade-out"></div>
+          <!-- link to s3 html doesn't work as expected: https://s3.amazonaws.com/retina-assets/yungtest/customer_journey/mr_cj_ordertype.html -->
+      </div>
+  </section>
+
+  <section class="fig-container" data-file="customer_journey_tree.html" data-transition="convex">
+      <div style="width: 50%; margin-left: 45% !important; background-color: #777777; font-size: 0.75em; border-radius: 20px;" data-transition="convex">
+        Visualization is part of the "background" page
+      </div>
+  </section>
+</section>
+
+<section>
+    <h1> Last slide</h1>
+    <div class="row no-margin-top">
+      <h5> Here is an image again.</h5>
+      <img src="img/team.jpg"  height="500" width="380">
+    </div>
+</section>
+
+</div> <!-- slides -->
+</div> <!-- Reveal -->
+
+<script src="reveal.js/lib/js/head.min.js"></script>
+<script src="reveal.js/js/reveal.js"></script>
+<script>
+
+// Full list of configuration options available at:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+    controls: false,
+    progress: true,
+    history: true,
+    center: false,
+    transition: 'fade',
+
+    // // optional configurations for reveald3
+    reveald3: {
+
+         // If the previous slide is a slide further in the deck (i.e. we come back to
+         // slide from the next slide), by default the last fragment transition will be
+         // triggered to to get the last state of the visualization and simulate the
+         // the state the simulation was in when we left the slide. This can be
+         // discarded.
+         runLastState: true, //default true
+
+         // Specifies if iframes (that host the visualization) have to be kept
+         // on the slide once the slide is not active anymore (e.g.: navigating
+         // to next slide). If true, the current visualization will be kept
+         // active so that its state will be the one displayed if we navigate
+         // back to the slide. This is false by default, as it can be the source
+         // of performance issues if complex visualizations (e.g. force layout)
+         // are displayed and kept in the background.
+         // Also, see the runLastState option as a simpler less
+         // resource-demanding alternative.
+         keepIframe: false, // default: false
+
+
+         // This will prefix the path attributes of the source html paths with the given path.
+         // (by default "src" if set to true or with the specified path if string)
+         mapPath: false, // default: false
+
+         // If true, will try to locate the file at a fallback url without the mapPath prefix in case no file is found
+         // at the stipulated url with mapPath
+         tryFallbackURL: false, //default false
+
+         // Checking for file existance has been reported to fail in rare
+         // cases though files did exist. This option is to disable the file checking.
+         //see: https://github.com/gcalmettes/reveal.js-d3/issues/10
+         disableCheckFile: false, //default false
+    },
+
+    // Reveal.js plugins
+    dependencies: [
+
+        { src: 'reveald3.js' },
+        { src: 'img/' }
+
+    ]
+});
+
+</script>
+</body>
+</html>

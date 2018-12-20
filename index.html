@@ -49,6 +49,9 @@
         opacity: 0.8;
         font-size: 18px;
         border-radius: 20px;
+        position: absolute;
+        top: 400px;
+        width: 70%;
       }
 
       #worst-summary {
@@ -57,6 +60,10 @@
         opacity: 0.8;
         font-size: 18px;
         border-radius: 20px;
+        position: relative;
+        top: 400px;
+        right: 400px;
+        width: 70%;
       }
 
   </style>
@@ -79,57 +86,93 @@
   </section>
 
   <!-- Page 1.2 -->
-  <section class="fig-container" data-file="customer_journey_tree.html" data-transition="fade"></section>
+  <section class="fig-container" data-file="tree_html/demo_cj_2018-12-20.html" data-transition="fade"></section>
+</section>
+<!-- END PAGE 1 -->
 
-  <!-- Page 1.3 -->
-  <section class="fig-container" data-file="customer_journey_tree.html" data-transition="fade">
+<!-- START PAGE 2 (Best Paths) -->
+<section>
+  <section><h1>What are the <u>best</u> paths associated with highest LTV?</h1></section>
+  <section class="fig-container" data-file="tree_html/demo_cj_best_1_2018-12-20.html" data-transition="fade">
+    <h5>Best Path</h5>
+  </section>
+  <section class="fig-container" data-file="tree_html/demo_cj_best_2_2018-12-20.html" data-transition="fade">
+    <h5>2nd Best Path</h5>
+  </section>
+  <section class="fig-container" data-file="tree_html/demo_cj_best_3_2018-12-20.html" data-transition="fade">
+    <h5>3rd Best Path</h5>
+  </section>
+</section>
+<!-- END PAGE 2-->
+
+<!-- START PAGE 3 (Worst Paths) -->
+<section>
+  <section><h1>What are the <u>worst</u> paths associated with lowest LTV?</h1></section>
+  <section class="fig-container" data-file="tree_html/demo_cj_worst_1_2018-12-20.html" data-transition="fade">
+    <h5>Worst Path</h5>
+  </section>
+  <section class="fig-container" data-file="tree_html/demo_cj_worst_2_2018-12-20.html" data-transition="fade">
+    <h5>2nd Worst Path</h5>
+  </section>
+  <section class="fig-container" data-file="tree_html/demo_cj_worst_3_2018-12-20.html" data-transition="fade">
+    <h5>3rd Worst Path</h5>
+  </section>
+</section>
+<!-- END PAGE 3 -->
+
+<!-- START PAGE 4 (buttons to toggle summaries)-->
+<section>
+
+  <!-- Page 4.1-->
+  <section class="fig-container" data-file="tree_html/demo_cj_2018-12-20.html" data-transition="fade">
     <button class='button best-button' onclick="toggleBest()">Hide/Show Best Paths</button>
     <div id='best-summary' style="display:none;" data-transition="convex">
-      <h5 style="text-align: center; padding:3%;">The best 5 paths associated with highest LTV are:</h5>
-      <ol style="padding: 3%;">
-        
+      <h5 style="text-align: center; padding:3%;">The best 5 paths in terms of LTV</h5>
+      <ol style="padding: 3%; font-size: 14px;">
+
           <li>Plan A -> Plan A -> Plan A -> Plan B -> Plan C: $757, among 3,173 (2%) users</li>
-        
+
           <li>Plan A -> Plan A -> Plan A -> Plan A -> Plan B: $750, among 1,908 (1%) users</li>
-        
+
           <li>Plan A -> Plan B -> Plan A -> Plan B -> Plan C: $745, among 1,135 (1%) users</li>
-        
+
           <li>Plan A -> Plan A -> Plan B -> Plan C -> Plan C: $736, among 6,790 (5%) users</li>
-        
+
           <li>Plan A -> Plan B -> Plan C -> Plan C -> Plan C: $727, among 17,415 (13%) users</li>
-        
+
       </ol>
     </div>
 
     <button class='button worst-button' onclick="toggleWorst()">Hide/Show Worst Paths</button>
     <div id='worst-summary' style="display:none;" data-transition="convex">
-      <h5 style="text-align: center; padding:3%;">The worst 5 paths associated with lowest LTV are:</h5>
-      <ol style="padding: 3%;">
-        
+      <h5 style="text-align: center; padding:3%;">The worst 5 paths in terms of LTV</h5>
+      <ol style="padding: 3%; font-size: 14px;">
+
           <li>Plan B -> CHURN: $32, among 23,084 (7%) users</li>
-        
+
           <li>Plan A -> CHURN: $35, among 113,982 (32%) users</li>
-        
+
           <li>Plan B -> Plan A -> CHURN: $55, among 2,213 (1%) users</li>
-        
+
           <li>Plan B -> Plan B -> CHURN: $64, among 1,808 (1%) users</li>
-        
+
           <li>Plan B -> Plan C -> CHURN: $67, among 18,472 (9%) users</li>
-        
+
       </ol>
     </div>
   </section>
 
 </section>
-<!-- END PAGE 1 -->
+<!-- END PAGE 4 -->
 
-<!-- Page 2.1 -->
+<!-- START FINAL PAGE -->
 <section>
     <h1> Questions?</h1>
     <div class="row no-margin-top">
       <p>If you have any questions, please reach out to info@retina.ai</p>
     </div>
 </section>
+<!-- END FINAL PAGE -->
 
 </div> <!-- slides -->
 </div> <!-- Reveal -->
@@ -161,7 +204,7 @@
 // Full list of configuration options available at:
 // https://github.com/hakimel/reveal.js#configuration
 Reveal.initialize({
-    controls: false,
+    controls: true,
     progress: true,
     history: true,
     center: false,
@@ -207,6 +250,8 @@ Reveal.initialize({
     dependencies: [
 
         { src: 'reveald3.js' },
+        { src: 'tree_html/' },
+        { src: 'data/' },
         { src: 'img/' }
 
     ]

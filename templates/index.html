@@ -49,6 +49,9 @@
         opacity: 0.8;
         font-size: 18px;
         border-radius: 20px;
+        position: absolute;
+        top: 400px;
+        width: 70%;
       }
 
       #worst-summary {
@@ -57,6 +60,10 @@
         opacity: 0.8;
         font-size: 18px;
         border-radius: 20px;
+        position: relative;
+        top: 400px;
+        right: 400px;
+        width: 70%;
       }
 
   </style>
@@ -85,8 +92,8 @@
   <section class="fig-container" data-file="customer_journey_tree.html" data-transition="fade">
     <button class='button best-button' onclick="toggleBest()">Hide/Show Best Paths</button>
     <div id='best-summary' style="display:none;" data-transition="convex">
-      <h5 style="text-align: center; padding:3%;">The best 5 paths associated with highest LTV are:</h5>
-      <ol style="padding: 3%;">
+      <h5 style="text-align: center; padding:3%;">The best 5 paths in terms of LTV</h5>
+      <ol style="padding: 3%; font-size: 14px;">
         {% for item in best_paths %}
           <li>{{ item }}</li>
         {% endfor %}
@@ -95,8 +102,8 @@
 
     <button class='button worst-button' onclick="toggleWorst()">Hide/Show Worst Paths</button>
     <div id='worst-summary' style="display:none;" data-transition="convex">
-      <h5 style="text-align: center; padding:3%;">The worst 5 paths associated with lowest LTV are:</h5>
-      <ol style="padding: 3%;">
+      <h5 style="text-align: center; padding:3%;">The worst 5 paths in terms of LTV</h5>
+      <ol style="padding: 3%; font-size: 14px;">
         {% for item in worst_paths %}
           <li>{{ item }}</li>
         {% endfor %}

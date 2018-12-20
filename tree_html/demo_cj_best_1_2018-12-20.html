@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Customer Journey Tree</title>
+    <style>
+      .node {
+        cursor: pointer;
+        white-space: pre;
+      }
+      .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        white-space: pre;
+      }
+      .node text {
+        font: 12px sans-serif;
+        white-space: pre;
+      }
+      .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+        white-space: pre;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="d3_plan_tree"></div>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script>
+
+      var treeData = [{'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '59.7%', 'delta_root': '-22%', 'num_users': '211,072', 'path_from': 'Plan A', 'parent': 'Start', 'weight': 6, 'children': [{'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '9.8%', 'delta_root': '+107%', 'num_users': '34,739', 'path_from': 'Plan A -> Plan B', 'parent': '1_Plan A', 'weight': 3, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '0.7%', 'delta_root': '-64%', 'num_users': '2,579', 'path_from': 'Plan A -> Plan B -> CHURN', 'parent': '2_Plan B', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'red', 'ltv': '$99', 'delta': '-83%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '7.9%', 'delta_root': '+122%', 'num_users': '27,818', 'path_from': 'Plan A -> Plan B -> Plan C', 'parent': '2_Plan B', 'weight': 2, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '1.0%', 'delta_root': '-32%', 'num_users': '3,396', 'path_from': 'Plan A -> Plan B -> Plan C -> CHURN', 'parent': '3_Plan C', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'ltv': '$186', 'delta': '-69%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '6.2%', 'delta_root': '+144%', 'num_users': '21,914', 'path_from': 'Plan A -> Plan B -> Plan C -> Plan C -> CHURN', 'parent': '3_Plan C', 'weight': 2, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '4.9%', 'delta_root': '+165%', 'ltv': '$727', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '17,415', 'delta': '+9%'}, {'delta_color': 'red', 'delta_root_color': 'grey', 'pct_users': '0.8%', 'delta_root': '+2%', 'ltv': '$280', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'num_users': '2,852', 'delta': '-58%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$669', 'delta': '+10%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.3%', 'delta_root': '+149%', 'num_users': '1,052', 'path_from': 'Plan A -> Plan B -> Plan C -> Plan B', 'parent': '3_Plan C', 'weight': 1, 'children': [], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$683', 'delta': '+12%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.4%', 'delta_root': '+138%', 'num_users': '1,456', 'path_from': 'Plan A -> Plan B -> Plan C -> Plan A', 'parent': '3_Plan C', 'weight': 1, 'children': [], 'name': 'Plan A', 'color': '#4CBB17', 'ltv': '$655', 'delta': '+7%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$610', 'delta': '+7%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.7%', 'delta_root': '+107%', 'num_users': '2,594', 'path_from': 'Plan A -> Plan B -> Plan A', 'parent': '2_Plan B', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.5%', 'delta_root': '+142%', 'num_users': '1,655', 'path_from': 'Plan A -> Plan B -> Plan A -> Plan B -> Plan C', 'parent': '3_Plan A', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.3%', 'delta_root': '+171%', 'ltv': '$745', 'parent': '4_Plan B', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '1,135', 'delta': '+12%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$666', 'delta': '+17%'}], 'name': 'Plan A', 'color': '#4CBB17', 'ltv': '$567', 'delta': '-0%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.5%', 'delta_root': '+124%', 'num_users': '1,748', 'path_from': 'Plan A -> Plan B -> Plan B', 'parent': '2_Plan B', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.4%', 'delta_root': '+151%', 'num_users': '1,258', 'path_from': 'Plan A -> Plan B -> Plan B -> Plan C', 'parent': '3_Plan B', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$691', 'delta': '+12%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$616', 'delta': '+8%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$569', 'delta': '+165%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '17.6%', 'delta_root': '+25%', 'num_users': '62,346', 'path_from': 'Plan A -> Plan A', 'parent': '1_Plan A', 'weight': 6, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '6.9%', 'delta_root': '-68%', 'num_users': '24,427', 'path_from': 'Plan A -> Plan A -> CHURN', 'parent': '2_Plan A', 'weight': 2, 'children': [], 'name': 'CHURN', 'color': 'red', 'ltv': '$89', 'delta': '-74%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '7.6%', 'delta_root': '+66%', 'num_users': '26,861', 'path_from': 'Plan A -> Plan A -> Plan A', 'parent': '2_Plan A', 'weight': 2, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '2.4%', 'delta_root': '-39%', 'num_users': '8,363', 'path_from': 'Plan A -> Plan A -> Plan A -> CHURN', 'parent': '3_Plan A', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'ltv': '$168', 'delta': '-63%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '1.2%', 'delta_root': '+159%', 'num_users': '4,144', 'path_from': 'Plan A -> Plan A -> Plan A -> Plan B -> Plan C', 'parent': '3_Plan A', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.9%', 'delta_root': '+176%', 'ltv': '$757', 'parent': '4_Plan B', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': 'yellow', 'num_users': '3,173', 'delta': '+6%'}], 'name': 'Plan B', 'color': 'yellow', 'ltv': '$712', 'delta': '+56%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '4.1%', 'delta_root': '+100%', 'num_users': '14,352', 'path_from': 'Plan A -> Plan A -> Plan A -> Plan A -> Plan A', 'parent': '3_Plan A', 'weight': 1, 'children': [{'delta_color': 'red', 'delta_root_color': 'grey', 'pct_users': '1.1%', 'delta_root': '-6%', 'ltv': '$257', 'parent': '4_Plan A', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'num_users': '3,766', 'delta': '-53%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '0.5%', 'delta_root': '+173%', 'ltv': '$750', 'parent': '4_Plan A', 'weight': 1, 'children': [], 'name': 'Plan B', 'color': '#4CBB17', 'num_users': '1,908', 'delta': '+37%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '2.5%', 'delta_root': '+130%', 'ltv': '$631', 'parent': '4_Plan A', 'weight': 1, 'children': [], 'name': 'Plan A', 'color': '#4CBB17', 'num_users': '8,678', 'delta': '+15%'}], 'name': 'Plan A', 'color': '#4CBB17', 'ltv': '$549', 'delta': '+21%'}], 'name': 'Plan A', 'color': 'yellow', 'ltv': '$455', 'delta': '+32%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '3.1%', 'delta_root': '+133%', 'num_users': '11,054', 'path_from': 'Plan A -> Plan A -> Plan B', 'parent': '2_Plan A', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '2.5%', 'delta_root': '+148%', 'num_users': '8,710', 'path_from': 'Plan A -> Plan A -> Plan B -> Plan C -> CHURN', 'parent': '3_Plan B', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '1.9%', 'delta_root': '+168%', 'ltv': '$736', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '6,790', 'delta': '+8%'}, {'delta_color': 'red', 'delta_root_color': 'grey', 'pct_users': '0.3%', 'delta_root': '-0%', 'ltv': '$274', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'num_users': '1,037', 'delta': '-60%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$681', 'delta': '+6%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$641', 'delta': '+86%'}], 'name': 'Plan A', 'color': 'yellow', 'ltv': '$345', 'delta': '+61%'}, {'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '32.2%', 'delta_root': '-87%', 'num_users': '113,982', 'path_from': 'Plan A -> CHURN', 'parent': '1_Plan A', 'weight': 6, 'children': [], 'name': 'CHURN', 'color': 'red', 'ltv': '$35', 'delta': '-84%'}], 'name': 'Plan A', 'color': 'yellow', 'ltv': '$215', 'delta': '-22%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '40.3%', 'delta_root': '+32%', 'num_users': '142,452', 'path_from': 'Plan B', 'parent': 'Start', 'weight': 6, 'name': 'Plan B', 'color': 'grey', '_children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '2.9%', 'delta_root': '+53%', 'num_users': '10,316', 'path_from': 'Plan B -> Plan B', 'parent': '1_Plan B', 'weight': 1, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '0.5%', 'delta_root': '-77%', 'num_users': '1,808', 'path_from': 'Plan B -> Plan B -> CHURN', 'parent': '2_Plan B', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'red', 'ltv': '$64', 'delta': '-85%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '1.9%', 'delta_root': '+83%', 'num_users': '6,802', 'path_from': 'Plan B -> Plan B -> Plan C', 'parent': '2_Plan B', 'weight': 1, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '0.3%', 'delta_root': '-50%', 'num_users': '1,231', 'path_from': 'Plan B -> Plan B -> Plan C -> CHURN', 'parent': '3_Plan C', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'ltv': '$137', 'delta': '-73%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '1.3%', 'delta_root': '+115%', 'num_users': '4,668', 'path_from': 'Plan B -> Plan B -> Plan C -> Plan C -> Plan C', 'parent': '3_Plan C', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '1.0%', 'delta_root': '+144%', 'ltv': '$670', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '3,385', 'delta': '+13%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$591', 'delta': '+18%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$503', 'delta': '+20%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.3%', 'delta_root': '+70%', 'num_users': '1,050', 'path_from': 'Plan B -> Plan B -> Plan B', 'parent': '2_Plan B', 'weight': 1, 'children': [], 'name': 'Plan B', 'color': 'grey', 'ltv': '$466', 'delta': '+11%'}], 'name': 'Plan B', 'color': 'grey', 'ltv': '$420', 'delta': '+16%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '2.7%', 'delta_root': '+43%', 'num_users': '9,393', 'path_from': 'Plan B -> Plan A', 'parent': '1_Plan B', 'weight': 1, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '0.6%', 'delta_root': '-80%', 'num_users': '2,213', 'path_from': 'Plan B -> Plan A -> CHURN', 'parent': '2_Plan A', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'red', 'ltv': '$55', 'delta': '-86%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.4%', 'delta_root': '+52%', 'num_users': '1,286', 'path_from': 'Plan B -> Plan A -> Plan A', 'parent': '2_Plan A', 'weight': 1, 'children': [], 'name': 'Plan A', 'color': 'grey', 'ltv': '$417', 'delta': '+6%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '1.7%', 'delta_root': '+88%', 'num_users': '5,894', 'path_from': 'Plan B -> Plan A -> Plan B', 'parent': '2_Plan A', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '1.1%', 'delta_root': '+118%', 'num_users': '3,942', 'path_from': 'Plan B -> Plan A -> Plan B -> Plan C -> Plan C', 'parent': '3_Plan B', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.8%', 'delta_root': '+144%', 'ltv': '$671', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '2,830', 'delta': '+12%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$600', 'delta': '+16%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$516', 'delta': '+31%'}], 'name': 'Plan A', 'color': 'grey', 'ltv': '$394', 'delta': '+8%'}, {'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '6.5%', 'delta_root': '-88%', 'num_users': '23,084', 'path_from': 'Plan B -> CHURN', 'parent': '1_Plan B', 'weight': 2, 'children': [], 'name': 'CHURN', 'color': 'red', 'ltv': '$32', 'delta': '-91%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '28.2%', 'delta_root': '+57%', 'num_users': '99,658', 'path_from': 'Plan B -> Plan C', 'parent': '1_Plan B', 'weight': 6, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '5.2%', 'delta_root': '-76%', 'num_users': '18,472', 'path_from': 'Plan B -> Plan C -> CHURN', 'parent': '2_Plan C', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'red', 'ltv': '$67', 'delta': '-85%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '20.4%', 'delta_root': '+87%', 'num_users': '72,218', 'path_from': 'Plan B -> Plan C -> Plan C', 'parent': '2_Plan C', 'weight': 6, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '3.5%', 'delta_root': '-48%', 'num_users': '12,239', 'path_from': 'Plan B -> Plan C -> Plan C -> CHURN', 'parent': '3_Plan C', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'ltv': '$142', 'delta': '-72%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '15.6%', 'delta_root': '+115%', 'num_users': '55,103', 'path_from': 'Plan B -> Plan C -> Plan C -> Plan C -> Plan A', 'parent': '3_Plan C', 'weight': 5, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '12.1%', 'delta_root': '+140%', 'ltv': '$659', 'parent': '4_Plan C', 'weight': 4, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '42,962', 'delta': '+12%'}, {'delta_color': 'red', 'delta_root_color': 'grey', 'pct_users': '2.6%', 'delta_root': '-13%', 'ltv': '$240', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'num_users': '9,048', 'delta': '-59%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.5%', 'delta_root': '+144%', 'ltv': '$671', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'Plan B', 'color': '#4CBB17', 'num_users': '1,664', 'delta': '+14%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.4%', 'delta_root': '+138%', 'ltv': '$653', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'Plan A', 'color': '#4CBB17', 'num_users': '1,429', 'delta': '+11%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$590', 'delta': '+15%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.7%', 'delta_root': '+120%', 'num_users': '2,592', 'path_from': 'Plan B -> Plan C -> Plan C -> Plan B -> Plan C', 'parent': '3_Plan C', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.6%', 'delta_root': '+138%', 'ltv': '$653', 'parent': '4_Plan B', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '2,076', 'delta': '+8%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$604', 'delta': '+17%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.6%', 'delta_root': '+113%', 'num_users': '2,283', 'path_from': 'Plan B -> Plan C -> Plan C -> Plan A -> Plan B', 'parent': '3_Plan C', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.5%', 'delta_root': '+154%', 'ltv': '$698', 'parent': '4_Plan A', 'weight': 1, 'children': [], 'name': 'Plan B', 'color': '#4CBB17', 'num_users': '1,630', 'delta': '+19%'}], 'name': 'Plan A', 'color': '#4CBB17', 'ltv': '$584', 'delta': '+13%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$515', 'delta': '+19%'}, {'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '1.3%', 'delta_root': '+78%', 'num_users': '4,688', 'path_from': 'Plan B -> Plan C -> Plan A', 'parent': '2_Plan C', 'weight': 1, 'children': [{'delta_color': 'red', 'delta_root_color': 'red', 'pct_users': '0.3%', 'delta_root': '-61%', 'num_users': '1,080', 'path_from': 'Plan B -> Plan C -> Plan A -> CHURN', 'parent': '3_Plan A', 'weight': 1, 'children': [], 'name': 'CHURN', 'color': 'grey', 'ltv': '$107', 'delta': '-78%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '0.9%', 'delta_root': '+126%', 'num_users': '3,035', 'path_from': 'Plan B -> Plan C -> Plan A -> Plan B -> Plan C', 'parent': '3_Plan A', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.6%', 'delta_root': '+149%', 'ltv': '$685', 'parent': '4_Plan B', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '2,262', 'delta': '+10%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$621', 'delta': '+27%'}], 'name': 'Plan A', 'color': 'grey', 'ltv': '$488', 'delta': '+13%'}, {'delta_color': '#4CBB17', 'delta_root_color': '#4CBB17', 'pct_users': '1.2%', 'delta_root': '+97%', 'num_users': '4,279', 'path_from': 'Plan B -> Plan C -> Plan B', 'parent': '2_Plan C', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.9%', 'delta_root': '+121%', 'num_users': '3,208', 'path_from': 'Plan B -> Plan C -> Plan B -> Plan C -> Plan C', 'parent': '3_Plan B', 'weight': 1, 'children': [{'delta_color': 'grey', 'delta_root_color': '#4CBB17', 'pct_users': '0.7%', 'delta_root': '+148%', 'ltv': '$683', 'parent': '4_Plan C', 'weight': 1, 'children': [], 'name': 'Plan C', 'color': '#4CBB17', 'num_users': '2,332', 'delta': '+13%'}], 'name': 'Plan C', 'color': '#4CBB17', 'ltv': '$607', 'delta': '+12%'}], 'name': 'Plan B', 'color': '#4CBB17', 'ltv': '$542', 'delta': '+26%'}], 'name': 'Plan C', 'color': 'grey', 'ltv': '$432', 'delta': '+19%'}], 'ltv': '$364', 'delta': '+32%'}], 'name': 'root', 'ltv': '$275', 'parent': 'na', 'num_users': '353,707'}];
+
+      (function(d3, treeData) {
+        // ************** Generate the tree diagram   *****************
+        var margin = {top: 0.01*window.innerHeight, right: 0.05*window.innerWidth, bottom: 0.01*window.innerHeight, left: 0.05*window.innerWidth},
+          width = window.innerWidth - margin.right - margin.left;
+          height = window.innerHeight - margin.top - margin.bottom;
+        var i = 0,
+          duration = parseInt(1),
+          root;
+        var tree = d3.layout.tree()
+          .size([height, width]);
+        var diagonal = d3.svg.diagonal()
+          .projection(function(d) { return [d.y, d.x]; });
+        var svg = d3.select(".d3_plan_tree").append("svg")
+          .attr("width", width + margin.right + margin.left)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        root = treeData[0];
+        root.x0 = height / 2;
+        root.y0 = 0;
+        update(root);
+        function update(source) {
+          // Compute the new tree layout.
+          var nodes = tree.nodes(root).reverse(),
+            links = tree.links(nodes);
+          // Normalize for fixed-depth.
+          nodes.forEach(function(d) { d.y = d.depth * 200*window.innerWidth/1600; });
+          // Update the nodes…
+          var node = svg.selectAll("g.node")
+            .data(nodes, function(d) { return d.id || (d.id = ++i); });
+          // Enter any new nodes at the parent's previous position.
+          var nodeEnter = node.enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+            .on("click", click)
+            .on("mouseover", handleMouseOver)
+            // .on("mousemove", handleMouseMove)
+            .on("mouseout", handleMouseOut)
+            ;
+          nodeEnter.append("circle")
+            .attr("r", 1e-6)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
+            .style("stroke", function(d) { return d.color; })
+            .style("stroke-width", function(d) { return d.weight; })
+            ;
+          nodeEnter.append("text")
+            .attr("x", function(d) { return d.children || d._children ? -14 : 14; })
+            .attr("dy", function(d) { return d.children || d._children ? -9 : 9; })
+            // .attr("dy", ".35em")
+            .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+            .text(function(d) { return d.name;})
+            .style("fill-opacity", 1e-6);
+          nodeEnter.append("text")
+            .attr("dx", "-0.9em")
+            .attr("dy", "0.3em")
+            .attr("font-size","1px")
+            // .attr("fill","red")
+            .attr("fill", function(d) {return d.delta_color;})
+            .text(function(d) { return d.delta;});
+          // Transition nodes to their new position.
+          var nodeUpdate = node.transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+          nodeUpdate.select("circle")
+            .attr("r", 13)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+          nodeUpdate.select("text")
+            .style("fill-opacity", 1);
+          // Transition exiting nodes to the parent's new position.
+          var nodeExit = node.exit().transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+            .remove();
+          nodeExit.select("circle")
+            .attr("r", 1e-6);
+          nodeExit.select("text")
+            .style("fill-opacity", 1e-6);
+          // Update the links…
+          var link = svg.selectAll("path.link")
+            .data(links, function(d) { return d.target.id; })
+            ;
+          // Enter any new links at the parent's previous position.
+          link.enter().insert("path", "g")
+            .attr("class", "link")
+            .attr("d", function(d) {
+            var o = {x: source.x0, y: source.y0};
+            return diagonal({source: o, target: o});
+            })
+            .style("stroke", function(d) { return d.target.color; })
+            .style("stroke-width", function(d) { return d.target.weight; })
+            ;
+          // Transition links to their new position.
+          link.transition()
+            .duration(duration)
+            .attr("d", diagonal);
+          // Transition exiting nodes to the parent's new position.
+          link.exit().transition()
+            .duration(duration)
+            .attr("d", function(d) {
+            var o = {x: source.x, y: source.y};
+            return diagonal({source: o, target: o});
+            })
+            .remove();
+          // Stash the old positions for transition.
+          nodes.forEach(function(d) {
+          d.x0 = d.x;
+          d.y0 = d.y;
+          });
+        }
+        // Toggle children on click.
+        function click(d) {
+          if (d.children) {
+          d._children = d.children;
+          d.children = null;
+          } else {
+          d.children = d._children;
+          d._children = null;
+          }
+          update(d);
+        }
+
+        // Create static summary text
+        var static_x = 1200*window.innerWidth/1680;
+        var static_y = 100*window.innerHeight/1050;
+        // "Selected Path Statistics"
+        var static_title = svg.append("text")
+          .attr(
+            {x:static_x,y:static_y,"font-size":"20px","font-family":"sans-serif"}
+          )
+          .text("Summary (for selected path)");
+        // Create line below static text
+        var static_line = svg.append("line")          // attach a line
+          .style("stroke", "black")  // colour the line
+          .attr("x1", static_x)     // x1 position of the first end of the line
+          .attr("y1", static_y + 10)      // y1 position of the first end of the line
+          .attr("x2", static_x + 320)     // x2 position of the second end of the line
+          .attr("y2", static_y + 10);    // y2 position of the second end of the line
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(0*30),"font-size":"18px","font-family":"sans-serif"})
+          .text("LTV:");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(1*30),"font-size":"18px","font-family":"sans-serif"})
+          .text("# of Users:");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(2*30),"font-size":"18px","font-family":"sans-serif"})
+          .text("Delta (Prev. Node):");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(3*30),"font-size":"18px","font-family":"sans-serif"})
+          .text("Delta (Global Avg):");
+        // Create Event Handlers for mouse
+        function handleMouseOver(d, i) {  // Add interactivity
+          console.log('handleMouseOver', d, i);
+              // Use D3 to select element, change color and size
+              d3.select(this)
+              .attr({fill: "orange"});
+              svg.append("text")
+                .attr({id: "hover_text_1",x: static_x+200, y:static_y+70+(0*30),
+                  "fill": d.color,"font-size": "18px","font-family": "sans-serif"})
+                .text(d.ltv);
+              svg.append("text")
+                .attr({id: "hover_text_2",x: static_x+200, y:static_y+70+(1*30),
+                  fill: "black","font-size": "18px","font-family": "sans-serif"})
+                .text(d.num_users + " (" + d.pct_users + ")");
+              svg.append("text")
+                .attr({id: "hover_text_3",x: static_x+200, y:static_y+70+(2*30),
+                  "fill": d.delta_color,"font-size": "18px","font-family": "sans-serif"})
+                .text(d.delta);
+              svg.append("text")
+                .attr({id: "hover_text_4",x: static_x+200, y:static_y+70+(3*30),
+                  "fill": d.delta_root_color,"font-size": "18px","font-family": "sans-serif"})
+                .text(d.delta_root);
+            }
+        function handleMouseOut(d,i) {
+              // Use D3 to select element, change color back to normal
+              d3.select(this).attr({
+                fill: "black"
+              });
+              d3.select("#hover_text_1").remove();
+              d3.select("#hover_text_2").remove();
+              d3.select("#hover_text_3").remove();
+              d3.select("#hover_text_4").remove();
+            }
+
+      })(window.d3, treeData);
+
+    </script>
+
+  </body>
+</html>

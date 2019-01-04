@@ -84,13 +84,13 @@
             .attr("dy", function(d) { return d.children || d._children ? -9 : 9; })
             // .attr("dy", ".35em")
             .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+            .attr("fill", "white")
             .text(function(d) { return d.name;})
             .style("fill-opacity", 1e-6);
           nodeEnter.append("text")
             .attr("dx", "-0.9em")
             .attr("dy", "0.3em")
             .attr("font-size","1px")
-            // .attr("fill","red")
             .attr("fill", function(d) {return d.delta_color;})
             .text(function(d) { return d.delta;});
           // Transition nodes to their new position.
@@ -161,31 +161,31 @@
         // "Selected Path Statistics"
         var static_title = svg.append("text")
           .attr(
-            {x:static_x,y:static_y,"font-size":"20px","font-family":"sans-serif"}
+            {x:static_x,y:static_y,"font-size":"20px","font-family":"sans-serif","fill":"white"}
           )
           .text("Summary (for selected path)");
         // Create line below static text
         var static_line = svg.append("line")          // attach a line
-          .style("stroke", "black")  // colour the line
+          .style("stroke", "white")  // colour the line
           .attr("x1", static_x)     // x1 position of the first end of the line
           .attr("y1", static_y + 10)      // y1 position of the first end of the line
           .attr("x2", static_x + 320)     // x2 position of the second end of the line
           .attr("y2", static_y + 10);    // y2 position of the second end of the line
         // Create static subheaders
         var static_title = svg.append("text")
-          .attr({x:static_x,y:static_y+70+(0*30),"font-size":"18px","font-family":"sans-serif"})
+          .attr({x:static_x,y:static_y+70+(0*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
           .text("LTV:");
         // Create static subheaders
         var static_title = svg.append("text")
-          .attr({x:static_x,y:static_y+70+(1*30),"font-size":"18px","font-family":"sans-serif"})
+          .attr({x:static_x,y:static_y+70+(1*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
           .text("# of Users:");
         // Create static subheaders
         var static_title = svg.append("text")
-          .attr({x:static_x,y:static_y+70+(2*30),"font-size":"18px","font-family":"sans-serif"})
+          .attr({x:static_x,y:static_y+70+(2*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
           .text("Delta (Prev. Node):");
         // Create static subheaders
         var static_title = svg.append("text")
-          .attr({x:static_x,y:static_y+70+(3*30),"font-size":"18px","font-family":"sans-serif"})
+          .attr({x:static_x,y:static_y+70+(3*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
           .text("Delta (Global Avg):");
         // Create Event Handlers for mouse
         function handleMouseOver(d, i) {  // Add interactivity
@@ -199,7 +199,7 @@
                 .text(d.ltv);
               svg.append("text")
                 .attr({id: "hover_text_2",x: static_x+200, y:static_y+70+(1*30),
-                  fill: "black","font-size": "18px","font-family": "sans-serif"})
+                  fill: "white","font-size": "18px","font-family": "sans-serif","fill":"white"})
                 .text(d.num_users + " (" + d.pct_users + ")");
               svg.append("text")
                 .attr({id: "hover_text_3",x: static_x+200, y:static_y+70+(2*30),

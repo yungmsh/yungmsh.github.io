@@ -57,10 +57,9 @@
         right: -100px;
         width: 200px;
         background-color: white;
-        padding: 14px 30px;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
+        /* text-decoration: none; */
+        /* display: inline-block; */
         color: black;
       }
 
@@ -70,65 +69,84 @@
 <div class="reveal">
 <div class="slides">
 
-<!-- START SECTION 1 -->
+<!-- Intro -->
 <section>
-
-  <!-- Intro -->
-  <section>
-    <h1>Visualizing the Customer Journey</h1>
-    <div class="prompt input_prompt"></div>
-    <p>This interactive deck allows you to explore the entire customer journey, and help identify paths that are most associated with high LTV.</p>
-    <br>
-    <h5>How To Use This Tool</h5>
-    <p>Hover your cursor over any path/node to display the average LTV of that path, how many users fall under this particular path, and what percentage of your entire user base it represents.</p>
-  </section>
-
+  <h1>Visualizing the Customer Journey</h1>
+  <div class="prompt input_prompt"></div>
+  <p>This interactive deck allows you to explore the entire customer journey, and help identify paths that are most associated with high LTV.</p>
+  <br>
+  <h5>How To Use This Tool</h5>
+  <p>
+    - Hover your cursor over any node to display summary statistics for the path up till that node.<br>
+    - Click on any node to collapse/expand it.
+  </p>
 </section>
-<!-- END SECTION 1 -->
 
-<!-- START SECTION 2 -->
-<section>
-  <!-- Main Visualization -->
-  <section class="fig-container" data-file="tree_html/tree_2019-01-04.html" data-transition="fade">
-    <img src="img/tree_legend.png" class="legend">
-  </section>
-
-  <!-- Common Path 1 -->
-  <section class="fig-container" data-file="tree_html/tree_common1_2019-01-04.html" data-transition="fade">
-    <img src="img/tree_legend.png" class="legend">
-    <div class="summary">
-      <h4 style="font-size:20px; color:black;">Most Common Path</h4>
-      <p style="font-size:12px;">This is the most common path (greatest # of users)</p>
-    </div>
-  </section>
-  <!-- Common Path 2 -->
-  <section class="fig-container" data-file="tree_html/tree_common2_2019-01-04.html" data-transition="fade">
-    <img src="img/tree_legend.png" class="legend">
-    <h5>2nd Most Common Path</h5>
-  </section>
-  <!-- Best Path 1 -->
-  <section class="fig-container" data-file="tree_html/tree_best1_2019-01-04.html" data-transition="fade">
-    <img src="img/tree_legend.png" class="legend">
-    <h5>Path with Highest LTV</h5>
-  </section>
-  <!-- Best Path 2 -->
-  <section class="fig-container" data-file="tree_html/tree_best2_2019-01-04.html" data-transition="fade">
-    <img src="img/tree_legend.png" class="legend">
-    <h5>Path with 2nd Highest LTV</h5>
-  </section>
-  <!-- Worst Path 1 -->
-  <section class="fig-container" data-file="tree_html/tree_worst1_2019-01-04.html" data-transition="fade">
-    <img src="img/tree_legend.png" class="legend">
-    <h5>Path with Lowest LTV</h5>
-  </section>
-  <!-- Worst Path 2 -->
-  <section class="fig-container" data-file="tree_html/tree_worst2_2019-01-04.html" data-transition="fade">
-    <img src="img/tree_legend.png" class="legend">
-    <h5>Path with 2nd Lowest LTV</h5>
-  </section>
-
+<!-- Main Visualization -->
+<section class="fig-container" data-file="tree_html/tree.html" data-transition="fade">
+  <img src="img/tree_legend.png" class="legend">
 </section>
-<!-- END PAGE 2-->
+
+<!-- Common Path 1 -->
+<section class="fig-container" data-file="tree_html/tree_common1.html" data-transition="fade">
+  <img src="img/tree_legend.png" class="legend">
+  <div class="summary" style="padding:10px;">
+    <h4 style="font-size:20px; color:black;">Most Common Path</h4>
+    <p style="font-size:12px;">This is the most common path (greatest # of users):<br>
+      Kale Smoothie
+    </p>
+  </div>
+</section>
+<!-- Common Path 2 -->
+<section class="fig-container" data-file="tree_html/tree_common2.html" data-transition="fade">
+  <img src="img/tree_legend.png" class="legend">
+  <div class="summary" style="padding:10px;">
+    <h4 style="font-size:20px; color:black;">2nd Most Common Path</h4>
+    <p style="font-size:12px;">This is the 2nd most common path (greatest # of users):<br>
+      Tomato Soup
+    </p>
+  </div>
+</section>
+<!-- Best Path 1 -->
+<section class="fig-container" data-file="tree_html/tree_best1.html" data-transition="fade">
+  <img src="img/tree_legend.png" class="legend">
+  <div class="summary" style="padding:10px;">
+    <h4 style="font-size:20px; color:black;">Path with Highest LTV</h4>
+    <p style="font-size:12px;">This is the path with the highest LTV:<br>
+      Kale Smoothie -> Kale Smoothie -> Kale Smoothie -> Tomato Soup -> Lunch Box
+    </p>
+  </div>
+</section>
+<!-- Best Path 2 -->
+<section class="fig-container" data-file="tree_html/tree_best2.html" data-transition="fade">
+  <img src="img/tree_legend.png" class="legend">
+  <div class="summary" style="padding:10px;">
+    <h4 style="font-size:20px; color:black;">Path with 2nd Highest LTV</h4>
+    <p style="font-size:12px;">This is the path with the 2nd highest LTV:<br>
+      Kale Smoothie -> Kale Smoothie -> Kale Smoothie -> Kale Smoothie -> Tomato Soup
+    </p>
+  </div>
+</section>
+<!-- Worst Path 1 -->
+<section class="fig-container" data-file="tree_html/tree_worst1.html" data-transition="fade">
+  <img src="img/tree_legend.png" class="legend">
+  <div class="summary" style="padding:10px;">
+    <h4 style="font-size:20px; color:black;">Path with Lowest LTV</h4>
+    <p style="font-size:12px;">This is the path with the lowest LTV:<br>
+      Tomato Soup -> CHURN
+    </p>
+  </div>
+</section>
+<!-- Worst Path 2 -->
+<section class="fig-container" data-file="tree_html/tree_worst2.html" data-transition="fade">
+  <img src="img/tree_legend.png" class="legend">
+  <div class="summary" style="padding:10px;">
+    <h4 style="font-size:20px; color:black;">Path with 2nd Lowest LTV</h4>
+    <p style="font-size:12px;">This is the path with the 2nd lowest LTV.<br>
+      Kale Smoothie -> CHURN
+    </p>
+  </div>
+</section>
 
 <!-- START FINAL PAGE -->
 <section>

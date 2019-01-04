@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Customer Journey Tree</title>
+    <style>
+      .node {
+        cursor: pointer;
+        white-space: pre;
+      }
+      .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        white-space: pre;
+      }
+      .node text {
+        font: 12px sans-serif;
+        white-space: pre;
+      }
+      .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+        white-space: pre;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="d3_plan_tree"></div>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script>
+
+      var treeData = [{'ltv': '$275', 'parent': 'na', 'children': [{'ltv': '$215', 'parent': 'Start', 'delta': '-22%', 'children': [{'ltv': '$35', 'parent': '1_Kale Smoothie', 'delta': '-84%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Kale Smoothie -> CHURN', 'weight': 6, 'pct_users': '32.2%', 'num_users': '113,982', 'delta_root': '-87%', 'color': 'red'}, {'ltv': '$569', 'parent': '1_Kale Smoothie', 'delta': '+165%', 'children': [{'ltv': '$567', 'parent': '2_Tomato Soup', 'delta': '-0%', 'children': [{'ltv': '$666', 'parent': '3_Kale Smoothie', 'delta': '+17%', 'children': [{'ltv': '$745', 'parent': '4_Tomato Soup', 'delta': '+12%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.3%', 'num_users': '1,135', 'delta_root': '+171%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Kale Smoothie -> Tomato Soup -> Lunch Box', 'weight': 1, 'pct_users': '0.5%', 'num_users': '1,655', 'delta_root': '+142%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Kale Smoothie', 'weight': 1, 'pct_users': '0.7%', 'num_users': '2,594', 'delta_root': '+107%', 'color': '#4CBB17'}, {'ltv': '$616', 'parent': '2_Tomato Soup', 'delta': '+8%', 'children': [{'ltv': '$691', 'parent': '3_Tomato Soup', 'delta': '+12%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Tomato Soup -> Lunch Box', 'weight': 1, 'pct_users': '0.4%', 'num_users': '1,258', 'delta_root': '+151%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Tomato Soup', 'weight': 1, 'pct_users': '0.5%', 'num_users': '1,748', 'delta_root': '+124%', 'color': '#4CBB17'}, {'ltv': '$99', 'parent': '2_Tomato Soup', 'delta': '-83%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Kale Smoothie -> Tomato Soup -> CHURN', 'weight': 1, 'pct_users': '0.7%', 'num_users': '2,579', 'delta_root': '-64%', 'color': 'red'}, {'ltv': '$610', 'parent': '2_Tomato Soup', 'delta': '+7%', 'children': [{'ltv': '$669', 'parent': '3_Lunch Box', 'delta': '+10%', 'children': [{'ltv': '$727', 'parent': '4_Lunch Box', 'delta': '+9%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '4.9%', 'num_users': '17,415', 'delta_root': '+165%', 'color': '#4CBB17'}, {'ltv': '$280', 'parent': '4_Lunch Box', 'delta': '-58%', 'children': [], 'delta_root_color': 'grey', 'name': 'CHURN', 'delta_color': 'red', 'weight': 1, 'pct_users': '0.8%', 'num_users': '2,852', 'delta_root': '+2%', 'color': 'grey'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Lunch Box -> Lunch Box -> CHURN', 'weight': 2, 'pct_users': '6.2%', 'num_users': '21,914', 'delta_root': '+144%', 'color': '#4CBB17'}, {'ltv': '$186', 'parent': '3_Lunch Box', 'delta': '-69%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Kale Smoothie -> Tomato Soup -> Lunch Box -> CHURN', 'weight': 1, 'pct_users': '1.0%', 'num_users': '3,396', 'delta_root': '-32%', 'color': 'grey'}, {'ltv': '$683', 'parent': '3_Lunch Box', 'delta': '+12%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Lunch Box -> Tomato Soup', 'weight': 1, 'pct_users': '0.3%', 'num_users': '1,052', 'delta_root': '+149%', 'color': '#4CBB17'}, {'ltv': '$655', 'parent': '3_Lunch Box', 'delta': '+7%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Lunch Box -> Kale Smoothie', 'weight': 1, 'pct_users': '0.4%', 'num_users': '1,456', 'delta_root': '+138%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Tomato Soup -> Lunch Box', 'weight': 2, 'pct_users': '7.9%', 'num_users': '27,818', 'delta_root': '+122%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'path_from': 'Kale Smoothie -> Tomato Soup', 'weight': 3, 'pct_users': '9.8%', 'num_users': '34,739', 'delta_root': '+107%', 'color': '#4CBB17'}, {'ltv': '$345', 'parent': '1_Kale Smoothie', 'delta': '+61%', 'children': [{'ltv': '$455', 'parent': '2_Kale Smoothie', 'delta': '+32%', 'children': [{'ltv': '$168', 'parent': '3_Kale Smoothie', 'delta': '-63%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Kale Smoothie -> Kale Smoothie -> Kale Smoothie -> CHURN', 'weight': 1, 'pct_users': '2.4%', 'num_users': '8,363', 'delta_root': '-39%', 'color': 'grey'}, {'ltv': '$712', 'parent': '3_Kale Smoothie', 'delta': '+56%', 'children': [{'ltv': '$757', 'parent': '4_Tomato Soup', 'delta': '+6%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.9%', 'num_users': '3,173', 'delta_root': '+176%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'path_from': 'Kale Smoothie -> Kale Smoothie -> Kale Smoothie -> Tomato Soup -> Lunch Box', 'weight': 1, 'pct_users': '1.2%', 'num_users': '4,144', 'delta_root': '+159%', 'color': '#4CBB17'}, {'ltv': '$549', 'parent': '3_Kale Smoothie', 'delta': '+21%', 'children': [{'ltv': '$631', 'parent': '4_Kale Smoothie', 'delta': '+15%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'weight': 1, 'pct_users': '2.5%', 'num_users': '8,678', 'delta_root': '+130%', 'color': '#4CBB17'}, {'ltv': '$750', 'parent': '4_Kale Smoothie', 'delta': '+37%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'weight': 1, 'pct_users': '0.5%', 'num_users': '1,908', 'delta_root': '+173%', 'color': 'yellow'}, {'ltv': '$257', 'parent': '4_Kale Smoothie', 'delta': '-53%', 'children': [], 'delta_root_color': 'grey', 'name': 'CHURN', 'delta_color': 'red', 'weight': 1, 'pct_users': '1.1%', 'num_users': '3,766', 'delta_root': '-6%', 'color': 'grey'}], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': '#4CBB17', 'path_from': 'Kale Smoothie -> Kale Smoothie -> Kale Smoothie -> Kale Smoothie -> CHURN', 'weight': 1, 'pct_users': '4.1%', 'num_users': '14,352', 'delta_root': '+100%', 'color': 'yellow'}], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': '#4CBB17', 'path_from': 'Kale Smoothie -> Kale Smoothie -> Kale Smoothie', 'weight': 2, 'pct_users': '7.6%', 'num_users': '26,861', 'delta_root': '+66%', 'color': 'yellow'}, {'ltv': '$641', 'parent': '2_Kale Smoothie', 'delta': '+86%', 'children': [{'ltv': '$681', 'parent': '3_Tomato Soup', 'delta': '+6%', 'children': [{'ltv': '$736', 'parent': '4_Lunch Box', 'delta': '+8%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '1.9%', 'num_users': '6,790', 'delta_root': '+168%', 'color': '#4CBB17'}, {'ltv': '$274', 'parent': '4_Lunch Box', 'delta': '-60%', 'children': [], 'delta_root_color': 'grey', 'name': 'CHURN', 'delta_color': 'red', 'weight': 1, 'pct_users': '0.3%', 'num_users': '1,037', 'delta_root': '-0%', 'color': 'grey'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Kale Smoothie -> Kale Smoothie -> Tomato Soup -> Lunch Box -> CHURN', 'weight': 1, 'pct_users': '2.5%', 'num_users': '8,710', 'delta_root': '+148%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'path_from': 'Kale Smoothie -> Kale Smoothie -> Tomato Soup', 'weight': 1, 'pct_users': '3.1%', 'num_users': '11,054', 'delta_root': '+133%', 'color': '#4CBB17'}, {'ltv': '$89', 'parent': '2_Kale Smoothie', 'delta': '-74%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Kale Smoothie -> Kale Smoothie -> CHURN', 'weight': 2, 'pct_users': '6.9%', 'num_users': '24,427', 'delta_root': '-68%', 'color': 'red'}], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': '#4CBB17', 'path_from': 'Kale Smoothie -> Kale Smoothie', 'weight': 6, 'pct_users': '17.6%', 'num_users': '62,346', 'delta_root': '+25%', 'color': 'yellow'}], 'delta_root_color': 'red', 'name': 'Kale Smoothie', 'delta_color': 'red', 'path_from': 'Kale Smoothie', 'weight': 6, 'pct_users': '59.7%', 'num_users': '211,072', 'delta_root': '-22%', 'color': 'yellow'}, {'ltv': '$364', 'parent': 'Start', 'delta': '+32%', 'children': [{'ltv': '$420', 'parent': '1_Tomato Soup', 'delta': '+16%', 'children': [{'ltv': '$466', 'parent': '2_Tomato Soup', 'delta': '+11%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Tomato Soup -> Tomato Soup', 'weight': 1, 'pct_users': '0.3%', 'num_users': '1,050', 'delta_root': '+70%', 'color': 'grey'}, {'ltv': '$64', 'parent': '2_Tomato Soup', 'delta': '-85%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Tomato Soup -> Tomato Soup -> CHURN', 'weight': 1, 'pct_users': '0.5%', 'num_users': '1,808', 'delta_root': '-77%', 'color': 'red'}, {'ltv': '$503', 'parent': '2_Tomato Soup', 'delta': '+20%', 'children': [{'ltv': '$591', 'parent': '3_Lunch Box', 'delta': '+18%', 'children': [{'ltv': '$670', 'parent': '4_Lunch Box', 'delta': '+13%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '1.0%', 'num_users': '3,385', 'delta_root': '+144%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Tomato Soup -> Lunch Box -> Lunch Box -> Lunch Box', 'weight': 1, 'pct_users': '1.3%', 'num_users': '4,668', 'delta_root': '+115%', 'color': '#4CBB17'}, {'ltv': '$137', 'parent': '3_Lunch Box', 'delta': '-73%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Tomato Soup -> Tomato Soup -> Lunch Box -> CHURN', 'weight': 1, 'pct_users': '0.3%', 'num_users': '1,231', 'delta_root': '-50%', 'color': 'grey'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Tomato Soup -> Lunch Box', 'weight': 1, 'pct_users': '1.9%', 'num_users': '6,802', 'delta_root': '+83%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Tomato Soup', 'weight': 1, 'pct_users': '2.9%', 'num_users': '10,316', 'delta_root': '+53%', 'color': 'grey'}, {'ltv': '$32', 'parent': '1_Tomato Soup', 'delta': '-91%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Tomato Soup -> CHURN', 'weight': 2, 'pct_users': '6.5%', 'num_users': '23,084', 'delta_root': '-88%', 'color': 'red'}, {'ltv': '$432', 'parent': '1_Tomato Soup', 'delta': '+19%', 'children': [{'ltv': '$488', 'parent': '2_Lunch Box', 'delta': '+13%', 'children': [{'ltv': '$107', 'parent': '3_Kale Smoothie', 'delta': '-78%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Tomato Soup -> Lunch Box -> Kale Smoothie -> CHURN', 'weight': 1, 'pct_users': '0.3%', 'num_users': '1,080', 'delta_root': '-61%', 'color': 'grey'}, {'ltv': '$621', 'parent': '3_Kale Smoothie', 'delta': '+27%', 'children': [{'ltv': '$685', 'parent': '4_Tomato Soup', 'delta': '+10%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.6%', 'num_users': '2,262', 'delta_root': '+149%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'path_from': 'Tomato Soup -> Lunch Box -> Kale Smoothie -> Tomato Soup -> Lunch Box', 'weight': 1, 'pct_users': '0.9%', 'num_users': '3,035', 'delta_root': '+126%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Lunch Box -> Kale Smoothie', 'weight': 1, 'pct_users': '1.3%', 'num_users': '4,688', 'delta_root': '+78%', 'color': 'grey'}, {'ltv': '$542', 'parent': '2_Lunch Box', 'delta': '+26%', 'children': [{'ltv': '$607', 'parent': '3_Tomato Soup', 'delta': '+12%', 'children': [{'ltv': '$683', 'parent': '4_Lunch Box', 'delta': '+13%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.7%', 'num_users': '2,332', 'delta_root': '+148%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Lunch Box -> Tomato Soup -> Lunch Box -> Lunch Box', 'weight': 1, 'pct_users': '0.9%', 'num_users': '3,208', 'delta_root': '+121%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'path_from': 'Tomato Soup -> Lunch Box -> Tomato Soup', 'weight': 1, 'pct_users': '1.2%', 'num_users': '4,279', 'delta_root': '+97%', 'color': '#4CBB17'}, {'ltv': '$67', 'parent': '2_Lunch Box', 'delta': '-85%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Tomato Soup -> Lunch Box -> CHURN', 'weight': 1, 'pct_users': '5.2%', 'num_users': '18,472', 'delta_root': '-76%', 'color': 'red'}, {'ltv': '$515', 'parent': '2_Lunch Box', 'delta': '+19%', 'children': [{'ltv': '$590', 'parent': '3_Lunch Box', 'delta': '+15%', 'children': [{'ltv': '$653', 'parent': '4_Lunch Box', 'delta': '+11%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.4%', 'num_users': '1,429', 'delta_root': '+138%', 'color': '#4CBB17'}, {'ltv': '$659', 'parent': '4_Lunch Box', 'delta': '+12%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 4, 'pct_users': '12.1%', 'num_users': '42,962', 'delta_root': '+140%', 'color': '#4CBB17'}, {'ltv': '$671', 'parent': '4_Lunch Box', 'delta': '+14%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.5%', 'num_users': '1,664', 'delta_root': '+144%', 'color': '#4CBB17'}, {'ltv': '$240', 'parent': '4_Lunch Box', 'delta': '-59%', 'children': [], 'delta_root_color': 'grey', 'name': 'CHURN', 'delta_color': 'red', 'weight': 1, 'pct_users': '2.6%', 'num_users': '9,048', 'delta_root': '-13%', 'color': 'grey'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Lunch Box -> Lunch Box -> Lunch Box -> CHURN', 'weight': 5, 'pct_users': '15.6%', 'num_users': '55,103', 'delta_root': '+115%', 'color': '#4CBB17'}, {'ltv': '$142', 'parent': '3_Lunch Box', 'delta': '-72%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Tomato Soup -> Lunch Box -> Lunch Box -> CHURN', 'weight': 1, 'pct_users': '3.5%', 'num_users': '12,239', 'delta_root': '-48%', 'color': 'grey'}, {'ltv': '$604', 'parent': '3_Lunch Box', 'delta': '+17%', 'children': [{'ltv': '$653', 'parent': '4_Tomato Soup', 'delta': '+8%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.6%', 'num_users': '2,076', 'delta_root': '+138%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Lunch Box -> Lunch Box -> Tomato Soup -> Lunch Box', 'weight': 1, 'pct_users': '0.7%', 'num_users': '2,592', 'delta_root': '+120%', 'color': '#4CBB17'}, {'ltv': '$584', 'parent': '3_Lunch Box', 'delta': '+13%', 'children': [{'ltv': '$698', 'parent': '4_Kale Smoothie', 'delta': '+19%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.5%', 'num_users': '1,630', 'delta_root': '+154%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Lunch Box -> Lunch Box -> Kale Smoothie -> Tomato Soup', 'weight': 1, 'pct_users': '0.6%', 'num_users': '2,283', 'delta_root': '+113%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Lunch Box -> Lunch Box', 'weight': 6, 'pct_users': '20.4%', 'num_users': '72,218', 'delta_root': '+87%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Lunch Box', 'weight': 6, 'pct_users': '28.2%', 'num_users': '99,658', 'delta_root': '+57%', 'color': 'grey'}, {'ltv': '$394', 'parent': '1_Tomato Soup', 'delta': '+8%', 'children': [{'ltv': '$417', 'parent': '2_Kale Smoothie', 'delta': '+6%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Kale Smoothie -> Kale Smoothie', 'weight': 1, 'pct_users': '0.4%', 'num_users': '1,286', 'delta_root': '+52%', 'color': 'grey'}, {'ltv': '$516', 'parent': '2_Kale Smoothie', 'delta': '+31%', 'children': [{'ltv': '$600', 'parent': '3_Tomato Soup', 'delta': '+16%', 'children': [{'ltv': '$671', 'parent': '4_Lunch Box', 'delta': '+12%', 'children': [], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'weight': 1, 'pct_users': '0.8%', 'num_users': '2,830', 'delta_root': '+144%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Lunch Box', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Kale Smoothie -> Tomato Soup -> Lunch Box -> Lunch Box', 'weight': 1, 'pct_users': '1.1%', 'num_users': '3,942', 'delta_root': '+118%', 'color': '#4CBB17'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'path_from': 'Tomato Soup -> Kale Smoothie -> Tomato Soup', 'weight': 1, 'pct_users': '1.7%', 'num_users': '5,894', 'delta_root': '+88%', 'color': '#4CBB17'}, {'ltv': '$55', 'parent': '2_Kale Smoothie', 'delta': '-86%', 'children': [], 'delta_root_color': 'red', 'name': 'CHURN', 'delta_color': 'red', 'path_from': 'Tomato Soup -> Kale Smoothie -> CHURN', 'weight': 1, 'pct_users': '0.6%', 'num_users': '2,213', 'delta_root': '-80%', 'color': 'red'}], 'delta_root_color': '#4CBB17', 'name': 'Kale Smoothie', 'delta_color': 'grey', 'path_from': 'Tomato Soup -> Kale Smoothie', 'weight': 1, 'pct_users': '2.7%', 'num_users': '9,393', 'delta_root': '+43%', 'color': 'grey'}], 'delta_root_color': '#4CBB17', 'name': 'Tomato Soup', 'delta_color': '#4CBB17', 'path_from': 'Tomato Soup', 'weight': 6, 'pct_users': '40.3%', 'num_users': '142,452', 'delta_root': '+32%', 'color': 'grey'}], 'name': 'root', 'num_users': '353,707'}];
+
+      (function(d3, treeData) {
+        // ************** Generate the tree diagram   *****************
+        var margin = {top: 0.01*window.innerHeight, right: 0.05*window.innerWidth, bottom: 0.01*window.innerHeight, left: 0.05*window.innerWidth},
+          width = window.innerWidth - margin.right - margin.left;
+          height = window.innerHeight - margin.top - margin.bottom;
+        var i = 0,
+          duration = parseInt(1),
+          root;
+        var tree = d3.layout.tree()
+          .size([height, width]);
+        var diagonal = d3.svg.diagonal()
+          .projection(function(d) { return [d.y, d.x]; });
+        var svg = d3.select(".d3_plan_tree").append("svg")
+          .attr("width", width + margin.right + margin.left)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        root = treeData[0];
+        root.x0 = height / 2;
+        root.y0 = 0;
+        update(root);
+        function update(source) {
+          // Compute the new tree layout.
+          var nodes = tree.nodes(root).reverse(),
+            links = tree.links(nodes);
+          // Normalize for fixed-depth.
+          nodes.forEach(function(d) { d.y = d.depth * 200*window.innerWidth/1600; });
+          // Update the nodes…
+          var node = svg.selectAll("g.node")
+            .data(nodes, function(d) { return d.id || (d.id = ++i); });
+          // Enter any new nodes at the parent's previous position.
+          var nodeEnter = node.enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+            .on("click", click)
+            .on("mouseover", handleMouseOver)
+            // .on("mousemove", handleMouseMove)
+            .on("mouseout", handleMouseOut)
+            ;
+          nodeEnter.append("circle")
+            .attr("r", 1e-6)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
+            .style("stroke", function(d) { return d.color; })
+            .style("stroke-width", function(d) { return d.weight; })
+            ;
+          nodeEnter.append("text")
+            .attr("x", function(d) { return d.children || d._children ? -14 : 14; })
+            .attr("dy", function(d) { return d.children || d._children ? -9 : 9; })
+            // .attr("dy", ".35em")
+            .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+            .attr("fill", "white")
+            .text(function(d) { return d.name;})
+            .style("fill-opacity", 1e-6);
+          nodeEnter.append("text")
+            .attr("dx", "-0.9em")
+            .attr("dy", "0.3em")
+            .attr("font-size","1px")
+            .attr("fill", function(d) {return d.delta_color;})
+            .text(function(d) { return d.delta;});
+          // Transition nodes to their new position.
+          var nodeUpdate = node.transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+          nodeUpdate.select("circle")
+            .attr("r", 13)
+            .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+          nodeUpdate.select("text")
+            .style("fill-opacity", 1);
+          // Transition exiting nodes to the parent's new position.
+          var nodeExit = node.exit().transition()
+            .duration(duration)
+            .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+            .remove();
+          nodeExit.select("circle")
+            .attr("r", 1e-6);
+          nodeExit.select("text")
+            .style("fill-opacity", 1e-6);
+          // Update the links…
+          var link = svg.selectAll("path.link")
+            .data(links, function(d) { return d.target.id; })
+            ;
+          // Enter any new links at the parent's previous position.
+          link.enter().insert("path", "g")
+            .attr("class", "link")
+            .attr("d", function(d) {
+            var o = {x: source.x0, y: source.y0};
+            return diagonal({source: o, target: o});
+            })
+            .style("stroke", function(d) { return d.target.color; })
+            .style("stroke-width", function(d) { return d.target.weight; })
+            ;
+          // Transition links to their new position.
+          link.transition()
+            .duration(duration)
+            .attr("d", diagonal);
+          // Transition exiting nodes to the parent's new position.
+          link.exit().transition()
+            .duration(duration)
+            .attr("d", function(d) {
+            var o = {x: source.x, y: source.y};
+            return diagonal({source: o, target: o});
+            })
+            .remove();
+          // Stash the old positions for transition.
+          nodes.forEach(function(d) {
+          d.x0 = d.x;
+          d.y0 = d.y;
+          });
+        }
+        // Toggle children on click.
+        function click(d) {
+          if (d.children) {
+          d._children = d.children;
+          d.children = null;
+          } else {
+          d.children = d._children;
+          d._children = null;
+          }
+          update(d);
+        }
+
+        // Create static summary text
+        var static_x = 1200*window.innerWidth/1680;
+        var static_y = 100*window.innerHeight/1050;
+        // "Selected Path Statistics"
+        var static_title = svg.append("text")
+          .attr(
+            {x:static_x,y:static_y,"font-size":"20px","font-family":"sans-serif","fill":"white"}
+          )
+          .text("Summary (for selected path)");
+        // Create line below static text
+        var static_line = svg.append("line")          // attach a line
+          .style("stroke", "white")  // colour the line
+          .attr("x1", static_x)     // x1 position of the first end of the line
+          .attr("y1", static_y + 10)      // y1 position of the first end of the line
+          .attr("x2", static_x + 320)     // x2 position of the second end of the line
+          .attr("y2", static_y + 10);    // y2 position of the second end of the line
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(0*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
+          .text("LTV:");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(1*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
+          .text("# of Users:");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(2*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
+          .text("Delta (Prev. Node):");
+        // Create static subheaders
+        var static_title = svg.append("text")
+          .attr({x:static_x,y:static_y+70+(3*30),"font-size":"18px","font-family":"sans-serif","fill":"white"})
+          .text("Delta (Global Avg):");
+        // Create Event Handlers for mouse
+        function handleMouseOver(d, i) {  // Add interactivity
+          console.log('handleMouseOver', d, i);
+              // Use D3 to select element, change color and size
+              d3.select(this)
+              .attr({fill: "orange"});
+              svg.append("text")
+                .attr({id: "hover_text_1",x: static_x+200, y:static_y+70+(0*30),
+                  "fill": d.color,"font-size": "18px","font-family": "sans-serif"})
+                .text(d.ltv);
+              svg.append("text")
+                .attr({id: "hover_text_2",x: static_x+200, y:static_y+70+(1*30),
+                  fill: "white","font-size": "18px","font-family": "sans-serif","fill":"white"})
+                .text(d.num_users + " (" + d.pct_users + ")");
+              svg.append("text")
+                .attr({id: "hover_text_3",x: static_x+200, y:static_y+70+(2*30),
+                  "fill": d.delta_color,"font-size": "18px","font-family": "sans-serif"})
+                .text(d.delta);
+              svg.append("text")
+                .attr({id: "hover_text_4",x: static_x+200, y:static_y+70+(3*30),
+                  "fill": d.delta_root_color,"font-size": "18px","font-family": "sans-serif"})
+                .text(d.delta_root);
+            }
+        function handleMouseOut(d,i) {
+              // Use D3 to select element, change color back to normal
+              d3.select(this).attr({
+                fill: "black"
+              });
+              d3.select("#hover_text_1").remove();
+              d3.select("#hover_text_2").remove();
+              d3.select("#hover_text_3").remove();
+              d3.select("#hover_text_4").remove();
+            }
+
+      })(window.d3, treeData);
+
+    </script>
+
+  </body>
+</html>
